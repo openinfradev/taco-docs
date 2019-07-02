@@ -19,6 +19,18 @@ First steps
    intro/aio.rst
 
 
+TACO 구조 및 기술
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: TACO 구조 및 기술
+   :glob:
+
+   architecture/*
+
+
 Indices and tables
 ------------------
 
