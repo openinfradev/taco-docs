@@ -15,10 +15,12 @@ First steps
    :maxdepth: 2
    :hidden:
    :caption: Contents:
-
+   
    intro/aio.rst
-
-
+   
+   ceph-ansible.rst	
+   openstack-helm.rst   
+   taco-management.rst
 
 
 Indices and tables
