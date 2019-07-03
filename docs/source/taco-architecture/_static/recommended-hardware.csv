@@ -2,38 +2,38 @@ Category,용도,EA,service,비고
 deploy,admin,1,"* docker register
 * helm repo
 * ansible-server
-* proxy, internet, vpn","> 8 core
-> 64G ram
-> 300G 2EA (OS용도)
-> 1T 2EA HDD (Repo 저장소)
-> 10G NIC x2, 4 port
-> 1G NIC"
+* proxy, internet, vpn","* 8 core
+* 64G ram
+* 300G 2EA (OS용도)
+* 1T 2EA HDD (Repo 저장소)
+* 10G NIC x2, 4 port
+* 1G NIC"
 k8s,k8s-master,3,"* kubectl, kubelet
-* scheduler, healthz, kubedns, dnsmasq, apiserver, contoller-manager","> 8 core
-> 32G ram
-> 300G 2EA (OS용도)
-> 10G NIC x2, 4 port
-> 1G NIC"
+* scheduler, healthz, kubedns, dnsmasq, apiserver, contoller-manager","* 8 core
+* 32G ram
+* 300G 2EA (OS용도)
+* 10G NIC x2, 4 port
+* 1G NIC"
 ,openstack-controller,3,"* kubectl, kubelet
 * mariadb, rabbitmq, memcached, haproxy, openvswitch
-* keystone, glance, cinder, nova, neutron, horizon","> 8 core
-> 32G ram
-> 300G 2 EA (OS용도)
-> 10G NIC x2, 4 port
-> 1G NIC"
+* keystone, glance, cinder, nova, neutron, horizon","* 8 core
+* 32G ram
+* 300G 2 EA (OS용도)
+* 10G NIC x2, 4 port
+* 1G NIC"
 ,openstack-compute,N,"* kubectl, kubelet
-* compute, libvirt, openvswitch-agent, linuxbridge-agent","> 24 core
-> 256G ram
-> 300G 2 EA (OS용도)
-> 10G NIC x2, 4 port
-> 1G NIC"
+* compute, libvirt, openvswitch-agent, linuxbridge-agent","* 24 core
+* 256G ram
+* 300G 2 EA (OS용도)
+* 10G NIC x2, 4 port
+* 1G NIC"
 Ceph,ADMIN,4,"* ceph-admin
 * ceph-mon
-* OSD","> 8 core
-> 128G ram
-> 300G 2 EA (OS용도)
-> 1TB 4 EA
-> 10G NIC x2, 4 port
-> 1G NIC"
+* OSD","* 8 core
+* 128G ram
+* 300G 2 EA (OS용도)
+* 1TB 4 EA
+* 10G NIC x2, 4 port
+* 1G NIC"
 Total,,"10 대
 +N Compute Nodes",,core는 H/T Off 기준

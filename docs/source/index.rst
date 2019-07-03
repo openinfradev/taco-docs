@@ -18,8 +18,8 @@ First steps
 
    intro/aio.rst
    tacoplay/kubespray.rst
-   taco-arc/taco-continuous-integration.rst
-   taco-arc/taco-deployment-architecture.rst
+   taco-architecture/taco-continuous-integration.rst
+   taco-architecture/taco-deployment-architecture.rst
 
 
 Indices and tables

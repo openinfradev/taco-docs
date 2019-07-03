@@ -31,7 +31,6 @@ Recommended Hardware 사양
 아래 표는 Full HA 형상으로 설치 시 필요한 하드웨어 사양을 기술한다.
 
 .. csv-table:: Recommended-Hardware
-
    :file: _static/recommended-hardware.csv
    :header-rows: 1
 
