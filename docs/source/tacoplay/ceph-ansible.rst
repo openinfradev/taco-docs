@@ -46,13 +46,13 @@ Ceph의 모든 컴포넌트와 사용자는 아래 5가지 Map을 바탕으로 �
 
 .. code-block:: yaml
 
-	$ ceph auth list
-	...
-	client.cinder
-    		key: AQAin8tU0CFgEhAATb7dfbseWsh+S5HEbg6MrGg==
-    		caps: [mon] profile rbd
-    		caps: [osd] profile rbd pool=volumes, profile rbd pool=backups, profile rbd pool=images
-	..
+   $ ceph auth list
+   ...
+   client.cinder
+       key: AQAin8tU0CFgEhAATb7dfbseWsh+S5HEbg6MrGg==
+       caps: [mon] profile rbd
+       caps: [osd] profile rbd pool=volumes, profile rbd pool=backups, profile rbd pool=images
+   ..
 
 .. figure:: _static/ceph4.png
 
@@ -82,7 +82,8 @@ Object to OSD mapping
 
 .. code-block:: yaml
 
-	$ ceph osd map volumes foo osdmap e103 pool 'volumes' (3) object 'foo' -> pg 3.7fc1f406 (3.6) -> up ([26,7,0], p26) acting ([26,7,0], p26)
+   $ ceph osd map volumes foo osdmap e103 pool 'volumes' (3) object 'foo' -> pg 3.7fc1f406 (3.6) -> up ([26,7,0], p26) acting ([26,7,0], p26)
+
 
 시스템 연동
 -----------
@@ -110,42 +111,46 @@ Kubernetes
 
 .. code-block:: yaml
 
-	$ ceph -s # 클러스터 상태 정보 요약
-	  cluster:
-	    id:     2e7d9617-1729-4763-ba7c-1f8736b2bbf4
-	    health: HEALTH_OK
-
-	  data:
-	    pools:   4 pools, 128 pgs
-	    objects: 65 objects, 256MiB
-	    usage:   4.53GiBused, 215GiB / 220GiB avail
-	    pgs:     128 active+clean
-
-
-	$ ceph -s
-	  cluster:
-	    id:     2e7d9617-1729-4763-ba7c-1f8736b2bbf4
-	    health: HEALTH_WARN
-	            1 osds down
-	            Degraded data redundancy: 6 pgs undersized
-
-	  services:
-	    mon: 1 daemons, quorum ceph-1
-	    mgr: ceph-1(active)
-	    osd: 4 osds: 3 up, 4 in
-
-	  data:
-	    pools:   4 pools, 128 pgs
-	    objects: 65 objects, 256MiB
-	    usage:   4.53GiBused, 215GiB / 220GiB avail
-	    pgs:     122 active+clean
-	             6   active+undersized
-
-
-	$ ceph health detail # 문제 원인 파악
-	$ ceph df # 사용량 파악
-	$ ceph osd df
-
+   $ ceph -s # 클러스터 상태 정보 요약
+     cluster:
+       id:     2e7d9617-1729-4763-ba7c-1f8736b2bbf4
+       health: HEALTH_OK
+  
+     services:
+       mon: 1 daemons, quorum ceph-1
+       mgr: ceph-1(active)
+       osd: 4 osds: 4 up, 4 in
+  
+     data:
+       pools:   4 pools, 128 pgs
+       objects: 65 objects, 256MiB
+       usage:   4.53GiBused, 215GiB / 220GiB avail
+       pgs:     128 active+clean
+ 
+ 
+   $ ceph -s
+     cluster:
+       id:     2e7d9617-1729-4763-ba7c-1f8736b2bbf4
+       health: HEALTH_WARN
+               1 osds down
+               Degraded data redundancy: 6 pgs undersized
+  
+     services:
+       mon: 1 daemons, quorum ceph-1
+       mgr: ceph-1(active)
+       osd: 4 osds: 3 up, 4 in
+  
+     data:
+       pools:   4 pools, 128 pgs
+       objects: 65 objects, 256MiB
+       usage:   4.53GiBused, 215GiB / 220GiB avail
+       pgs:     122 active+clean
+                6   active+undersized
+ 
+ 
+$ ceph health detail # 문제 원인 파악
+$ ceph df # 사용량 파악
+$ ceph osd df
 
 Troubleshooting
 ===============
@@ -211,54 +216,54 @@ extra-vas.yml에 Ceph 설치 내역 정의
 
 .. code-block:: yaml
 
-	cluster: ceph # 생략 가능, 기본값: ceph
-	monitor_interface: eth0
-	public_network: 192.168.0.0/24
-	network: 192.168.1.0/24
-	 
-	ceph_monitors: 192.168.0.23,192.168.0.25,192.168.0.26
-	 
-	ceph_stable_release: luminous
-	osd_objectstore: bluestore
+   cluster: ceph # 생략 가능, 기본값: ceph
+   monitor_interface: eth0
+   public_network: 192.168.0.0/24
+   cluster_network: 192.168.1.0/24
  
-	ceph_conf_overrides:
-	  global:
-	    mon_allow_pool_delete: true
-	    mon_osd_down_out_subtree_limit: host
-	    osd_pool_default_size: 3
-	    osd_pool_default_min_size: 2
-	    osd_pg_stat_report_internal_max: 1
-	 
-	openstack_config: true
-	kube_pool:
-	  name: "kube"
-	  pg_num: 64
-	  pgp_num: 64
-	  rule_name: "replicated_rule"
-	  type: 1
-	  erasure_profile: ""
-	  expected_num_objects: ""
-	  application: "rbd"
-	openstack_glance_pool:
-	  name: "images"
-	  pg_num: 64
-	  pgp_num: 64
-	  rule_name: "replicated_rule"
-	  type: 1
-	  erasure_profile: ""
-	  expected_num_objects: ""
-	openstack_cinder_pool:
-	  name: "volumes"
-	  pg_num: 512
-	  pgp_num: 512
-	  rule_name: "replicated_rule"
-	  type: 1
-	  erasure_profile: ""
-	  expected_num_objects: ""
-	openstack_pools:
-	  - "{{ kube_pool }}"
-	  - "{{ openstack_glance_pool }}"
-	  - "{{ openstack_cinder_pool }}"
+   ceph_monitors: 192.168.0.23,192.168.0.25,192.168.0.26
+ 
+   ceph_stable_release: luminous
+   osd_objectstore: bluestore
+ 
+   ceph_conf_overrides:
+     global:
+       mon_allow_pool_delete: true
+       mon_osd_down_out_subtree_limit: host
+       osd_pool_default_size: 3
+       osd_pool_default_min_size: 2
+       osd_pg_stat_report_internal_max: 1
+ 
+   openstack_config: true
+   kube_pool:
+     name: "kube"
+     pg_num: 64
+     pgp_num: 64
+     rule_name: "replicated_rule"
+     type: 1
+     erasure_profile: ""
+     expected_num_objects: ""
+     application: "rbd"
+   openstack_glance_pool:
+     name: "images"
+     pg_num: 64
+     pgp_num: 64
+     rule_name: "replicated_rule"
+     type: 1
+     erasure_profile: ""
+     expected_num_objects: ""
+   openstack_cinder_pool:
+     name: "volumes"
+     pg_num: 512
+     pgp_num: 512
+     rule_name: "replicated_rule"
+     type: 1
+     erasure_profile: ""
+     expected_num_objects: ""
+   openstack_pools:
+     - "{{ kube_pool }}"
+     - "{{ openstack_glance_pool }}"
+     - "{{ openstack_cinder_pool }}"
 
 옵션 2) 기존 Ceph 연동
 ----------------------
@@ -267,10 +272,10 @@ extra-vars.yml 에 Ceph Mon IP 주소와 user ID, Key 값을 지정
 
 .. code-block:: yaml
 
-	# ceph
-	ceph_monitors: 192.168.99.01
+   # ceph
+   ceph_monitors: 192.168.99.01
 	ceph_admin_keyring: ABCDEFGHJKAjEhAAUFQ1xmhsc7PccAx0r+NGPA==
- 
+
 	rbd_provisioner_admin_id: admin
 	rbd_provisioner_secret: "{{ ceph_admin_keyring }}"
 	rbd_provisioner_user_id: kube
