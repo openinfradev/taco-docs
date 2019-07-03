@@ -18,6 +18,12 @@ First steps
 
    intro/aio.rst
 
+   tacoplay/ceph-ansible.rst
+
+   tacoplay/openstack-helm.rst
+
+   tacoplay/taco-management.rst
+
 
 Indices and tables
 ------------------
