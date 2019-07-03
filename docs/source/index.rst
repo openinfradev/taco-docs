@@ -16,11 +16,10 @@ First steps
    :hidden:
    :caption: Contents:
    
-   intro/aio.rst
-   
-   ceph-ansible.rst	
-   openstack-helm.rst   
-   taco-management.rst
+   intro/aio.rst   
+   tacoplay/ceph-ansible.rst	
+   tacoplay/openstack-helm.rst   
+   tacoplay/taco-management.rst
 
 
 Indices and tables
