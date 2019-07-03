@@ -274,12 +274,12 @@ extra-vars.yml 에 Ceph Mon IP 주소와 user ID, Key 값을 지정
 
    # ceph
    ceph_monitors: 192.168.99.01
-	ceph_admin_keyring: ABCDEFGHJKAjEhAAUFQ1xmhsc7PccAx0r+NGPA==
+   ceph_admin_keyring: ABCDEFGHJKAjEhAAUFQ1xmhsc7PccAx0r+NGPA==
 
-	rbd_provisioner_admin_id: admin
-	rbd_provisioner_secret: "{{ ceph_admin_keyring }}"
-	rbd_provisioner_user_id: kube
-	rbd_provisioner_user_secret: ABCDEFGHJAA4BhAACAaJLcqnmTHIFzS3cJwbAQ==
+   rbd_provisioner_admin_id: admin
+   rbd_provisioner_secret: "{{ ceph_admin_keyring }}"
+   rbd_provisioner_user_id: kube
+   rbd_provisioner_user_secret: ABCDEFGHJAA4BhAACAaJLcqnmTHIFzS3cJwbAQ==
 
 참고문서
 ========

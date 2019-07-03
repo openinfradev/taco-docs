@@ -14,7 +14,7 @@ Kubernetes의 패키지 매니저
 링크: https://helm.sh/
 	* Kubernetes 애플리케이션을 정의, 설치 및 업그레이드 할 수 있는 chart를 만들고 관리할 수 있도록 함. 
 	* chart 작성 표준에 맞춰서 chart를 작성한 후 repository에 넣어서 관리하고 kubernetes에 배포
-
+ 
 작동 원리
 ---------
 
