@@ -17,6 +17,9 @@ First steps
    :caption: Contents:
 
    intro/aio.rst
+   tacoplay/kubespray.rst
+   taco-arc/taco-continuous-integration.rst
+   taco-arc/taco-deployment-architecture.rst
 
 
 Indices and tables
@@ -32,3 +35,4 @@ Indices and tables
    :maxdepth: 2
    :hidden:
    :caption: First steps
+
