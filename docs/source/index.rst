@@ -11,6 +11,7 @@ Welcome to taco documentation!
    :caption: First Step
 
    intro/aio.rst
+   tacoplay/kubespray.rst
 
 
 .. toctree::
@@ -18,6 +19,7 @@ Welcome to taco documentation!
    :caption: TACOPLAY
 
    tacoplay/tacoplay.rst
+   tacoplay/kubespray.rst
 
 
 .. toctree::
