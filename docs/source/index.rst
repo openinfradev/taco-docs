@@ -18,3 +18,11 @@ Welcome to taco documentation!
    :caption: TACOPLAY
 
    tacoplay/tacoplay.rst
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: TACO 구조 및 기술
+   :glob:
+
+   architecture/*
