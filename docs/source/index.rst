@@ -3,48 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to taco-docs's documentation!
+Welcome to taco documentation!
 =====================================
-
-First steps
------------
-
-테스트
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
-   :caption: Contents:
+   :caption: First Step
 
    intro/aio.rst
 
-tacoplay
---------
-
-tacoplay 소개
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
    :caption: TACOPLAY
 
    tacoplay/tacoplay.rst
-
-
-Indices and tables
-------------------
-
-테스트
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: First steps
