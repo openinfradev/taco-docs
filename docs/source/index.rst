@@ -12,8 +12,6 @@ Welcome to taco documentation!
 
    intro/aio.rst
    tacoplay/kubespray.rst
-   taco-architecture/taco-continuous-integration.rst
-   taco-architecture/taco-deployment-architecture.rst
 
 
 .. toctree::
@@ -21,6 +19,7 @@ Welcome to taco documentation!
    :caption: TACOPLAY
 
    tacoplay/tacoplay.rst
+   tacoplay/kubespray.rst
 
 
 .. toctree::
