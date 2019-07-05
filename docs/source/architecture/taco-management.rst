@@ -31,9 +31,4 @@ Global BGP Peers - Aggregation Switch를 Route Reflector로 활용
 .. figure:: _static/man3.png
 
 
-L3 스위치 BGP 수용력 시험
-=========================
-시험 스위치: Brocade VDX7640 
-결과: !파일!
-(참고: 해당 자료는 SK텔레콤 플랫폼Infra그룹에서 제공해주신 정보이며, SKT 내에서만 배포 가능합니다) 
 

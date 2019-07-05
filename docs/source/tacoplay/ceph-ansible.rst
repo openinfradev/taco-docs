@@ -18,7 +18,7 @@ Components
 
 
 특징
-===
+====
 
 기본 Data 저장 방식
 -------------------
@@ -60,8 +60,10 @@ Ceph의 모든 컴포넌트와 사용자는 아래 5가지 Map을 바탕으로 �
 데이터 저장을 위한 자료구조
 ---------------------------
 
-Pool: Ceph이 데이터를 저장하는 논리적인 공간
---------------------------------------------
+Pool:
+-----
+
+Ceph이 데이터를 저장하는 논리적인 공간
 
 * Ownership/Access to Objects
 * The Number of Placement Groups, and
@@ -69,9 +71,10 @@ Pool: Ceph이 데이터를 저장하는 논리적인 공간
 
 .. figure:: _static/ceph5.png
 
+Placement Group (PG):
+---------------------
 
-Placement Group (PG): 데이터 배치는 object 단위가 아닌 PG 단위로 수행, Pool 마다 적정한 개수의 PG를 보유 (https://ceph.com/pgcalc/)
------------------------------------------------------------------------------------------------------------------------------------
+데이터 배치는 object 단위가 아닌 PG 단위로 수행, Pool 마다 적정한 개수의 PG를 보유 (https://ceph.com/pgcalc/)
 
 .. figure:: _static/ceph6.png
 
@@ -203,7 +206,7 @@ PG 상태 정보
 
 
 설치
-===
+====
 
 * ceph-ansible: Ceph 클러스터 구축 (tacoplay/ceph-ansible)
 * rbd_provisioner role: Kubernetes external provisioner 생성 및 Storage class 등록 (tacoplay/roles/rbd_provisioner)
