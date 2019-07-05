@@ -11,7 +11,6 @@ Welcome to taco documentation!
    :caption: First Step
 
    intro/aio.rst
-   tacoplay/kubespray.rst
 
 
 .. toctree::
@@ -19,11 +18,17 @@ Welcome to taco documentation!
    :caption: TACOPLAY
 
    tacoplay/tacoplay.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Sub-project
+
    tacoplay/kubespray.rst
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: TACO 구조 및 기술
    :glob:
 

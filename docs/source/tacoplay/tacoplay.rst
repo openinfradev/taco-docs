@@ -31,7 +31,7 @@ tacoplay 구성
 
 * armada: armada 설치에 필요한 소스
 * ceph-ansible: ceph 설치 자동화를 위한 ansible playbook
-* kubespray: kubernetes 설치 자동화를 위한 ansible playbook
+* :doc:`kubespray`: kubernetes 설치 자동화를 위한 ansible playbook
 * charts: kubernetes위에 openstack을 배포하기 위한 helm chart
 
 playbooks
