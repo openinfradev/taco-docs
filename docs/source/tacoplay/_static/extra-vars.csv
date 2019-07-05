@@ -1,0 +1,18 @@
+﻿설정 값,관련 playbook,description
+cicd_registry_enabled,tacoplay,"VS lab 내부 registry 사용 여부, 외부에서는 항상 false"
+localrepo_enabled,tacoplay,Local repo 사용 여부
+localrepo_yum,tacoplay,Local yum repo URL
+localrepo_k8s,tacoplay,Local k8s 바이너리 repo URL
+localrepo_pypi,tacoplay,Local pypi 서버
+taco_storage,tacoplay,PV 생성에 사용할 backend storage 타입(기본값: rbd)
+ceph_monitors,tacoplay,"Ceph monitor 주소, tacoplay로 ceph을 설치하지 않고 연동만 하는 경우에만 설정"
+ceph_admin_keyring,tacoplay,"Ceph admin keyring 값, tacoplay로 ceph을 설치하지 않고 연동만 하는 경우에만 설정"
+monitor_interface,ceph-ansible,"Ceph monitor 주소가 할당된 인터페이스 이름, tacoplay로 ceph을 설치하는 경우에만 설정"
+public_network,ceph-ansible,"Ceph public network 대역, tacoplay로 ceph을 설치하는 경우에만 설정"
+cluster_network,ceph-ansible,"Ceph cluster network 대역, tacoplay로 ceph을 설치하는 경우에만 설정"
+osd_objectstore,ceph-ansible,"Ceph object store 타입, tacoplay로 ceph을 설치하는 경우에만 설정"
+lvm_volumes,ceph-ansible,"Ceph에서 사용할 lvm volume 목록, tacoplay로 ceph을 설치하는 경우에만 설정"
+kube_pods_subnet,kubespray,K8S pod에 할당할 IP 대역
+kube_service_addresses,kubespray,K8S service IP로 사용할 대역
+ipip_mode,kubespray,"Pod 간 통신 시에 ipip 터널링 사용 여부, 클라우드 환경에서 보통 true, 베어메탈 구축 시 보통 false"
+peer_with_router,kubespray,"인프라 router에 pod 대역을 광고할 지 여부, 클러스터 스케일을 고려해 결정"

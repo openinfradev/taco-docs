@@ -3,18 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to taco-docs's documentation!
+Welcome to taco documentation!
 =====================================
-
-First steps
------------
-
-테스트
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
-   :caption: Contents:
+   :caption: First Step
 
    intro/aio.rst
    tacoplay/kubespray.rst
@@ -22,17 +16,16 @@ First steps
    taco-architecture/taco-deployment-architecture.rst
 
 
-Indices and tables
-------------------
+.. toctree::
+   :maxdepth: 2
+   :caption: TACOPLAY
 
-테스트
+   tacoplay/tacoplay.rst
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
-   :caption: First steps
+   :caption: TACO 구조 및 기술
+   :glob:
 
+   architecture/*
