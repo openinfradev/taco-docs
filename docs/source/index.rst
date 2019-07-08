@@ -25,7 +25,8 @@ Welcome to taco documentation!
    :caption: Sub-project
 
    tacoplay/kubespray.rst
-
+   tacoplay/ceph-ansible.rst
+   tacoplay/openstack-helm.rst
 
 .. toctree::
    :maxdepth: 1
