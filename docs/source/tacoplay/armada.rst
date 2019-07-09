@@ -1,10 +1,11 @@
-******
-Armada
-******
+**************
+Airship-armada
+**************
 
 개념
 ====
 
+* 오픈소스 툴을 연동하여 인프라를 구성하는 `Airship프로젝트 <https://openinfradev.github.io/AirshipIntro/>`_ 의 Subproject
 * 여러 개의 helm chart를 그룹으로 묶어 설치 및 업그레이드 할 수 있도록 만든 orchestrator
 * 하나의 armada manifest 파일로 여러 차트와 관련된 설정들을 관리
 * 복잡한 마이크로 서비스 형태로 구성된 오픈스택 서비스들을 openstack-helm으로 패키징 하고, 이를 선언적으로 관리하고 오케스트레이션 할 수 있도록 함
