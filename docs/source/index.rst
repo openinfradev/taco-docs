@@ -19,6 +19,12 @@ Welcome to taco documentation!
 
    tacoplay/tacoplay.rst
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Admin guide
+   :glob:
+
+   operation/*
 
 .. toctree::
    :maxdepth: 1

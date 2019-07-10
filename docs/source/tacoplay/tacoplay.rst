@@ -503,7 +503,7 @@ TODO) 설명 추가
 scale.yml
 ---------
 
-taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장 절차와 playbook 실행 명령은 Adding nodes with Kubespray를 참고한다.
+taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장 절차와 playbook 실행 명령은 :doc:`../operation/scale-out` 를 참고한다.
 
 TODO) 설명 추가
 
