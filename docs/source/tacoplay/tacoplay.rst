@@ -5,13 +5,13 @@ TACOPLAY
 Introduction
 ============
 
-tacoplay는 TACO를 구성하고 있는 다음의 소프트웨어들을 쉽게 설치하고 설정할 수 있게 해 주는 ansible playbook으로, 다양한 오픈 소스 프로젝트들과 자체 개발한 playbook들로 이뤄져 있다. 괄호 안은 해당 소프트웨어를 설치하는 데 사용하고 있는 주요 오픈 소스 프로젝트다. 
+tacoplay는 TACO를 구성하고 있는 다양한 서비스를 쉽게 설치하고 설정할 수 있게 해 주는 ansible playbook의 모음으로, 오픈 소스 프로젝트들과 자체 개발한 playbook들로 이뤄져 있다. 다음은 TACO에서 사용하는 오픈소스 프로젝트로 괄호 안은 해당 소프트웨어를 설치하는 데 사용하고 있는 주요 오픈 소스 프로젝트다.
 
 * Docker registry
-* Ceph (ceph-ansible)
-* Kubernetes (kubespray)
-* Armada
-* OpenStack (openstack-helm, openstack-helm-infra)
+* :doc:`ceph-ansible`
+* Kubernetes (:doc:`kubespray`)
+* :doc:`armada`
+* OpenStack (:doc:`openstack-helm`)
 * Logging, Monitoring, Alarm (openstack-helm-infra)
 
 
@@ -31,7 +31,7 @@ tacoplay 구성
 
 * armada: armada 설치에 필요한 소스
 * ceph-ansible: ceph 설치 자동화를 위한 ansible playbook
-* :doc:`kubespray`: kubernetes 설치 자동화를 위한 ansible playbook
+* kubespray: kubernetes 설치 자동화를 위한 ansible playbook
 * charts: kubernetes위에 openstack을 배포하기 위한 helm chart
 
 playbooks
@@ -498,14 +498,18 @@ armada-apply.yml
 
 site.yml playbook을 적어도 한번 성공적으로 수행한 후(최소한 armada 설치까지), armada-manifest.yml만 수정해서 적용하고 싶은 경우 사용한다.
 
-TODO) 설명 추가
+.. code-block:: shell
+
+   $ ansible-playbook -v -b -i inventory/sample.ini armada-apply.yml
 
 scale.yml
 ---------
 
-taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장 절차와 playbook 실행 명령은 Adding nodes with Kubespray를 참고한다.
+taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장 절차와 playbook 실행 명령은 :doc:`scale-out` 를 참고한다.
 
-TODO) 설명 추가
+.. code-block:: shell
+
+   $ ansible-playbook -v -b -i inventory/sample.ini scale.yml
 
 
  
