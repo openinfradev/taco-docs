@@ -509,7 +509,7 @@ taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장
 
 .. code-block:: shell
 
-   $ ansible-playbook -v -b -i inventory/sample.ini scale.yml
+   $ ansible-playbook -v -b -i inventory/sample.ini scale.yml --limit etcd,new_nodes
 
 
  
