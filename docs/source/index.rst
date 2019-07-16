@@ -54,6 +54,7 @@ The main documentation for the site is organized into the following sections:
    tacoplay/kubespray.rst
    tacoplay/ceph-ansible.rst
    tacoplay/openstack-helm.rst
+   tacoplay/armada.rst
 
 
 .. toctree::
