@@ -35,3 +35,10 @@ Welcome to taco documentation!
    :glob:
 
    architecture/*
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contribute
+   
+
+   contribute.rst
