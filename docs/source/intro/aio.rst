@@ -5,11 +5,13 @@ TACO install - aio node
 테스트 환경 사양
 ================
 
+이 매뉴얼은 다음 환경에서 테스트 한 것을 바탕으로 작성하였다.
+
 * Flavor : m1.3xlarge 
 * VCPU:8
 * RAM: 24G
 * Memory: 160G 
-* Network: public-network
+* Network: 
 * OS: CentOS-7-x86_64-GenericCloud-1901
 
 
@@ -50,9 +52,9 @@ tacoplay 설정
 
 ansible-playbook 실행 시 필요한 변수 값을 정의한다.
  
-| - monitor_interface, public_network, cluster_network, lvm_molumes 확인 후 적절한 값으로 수정 
+| - monitor_interface, public_network, cluster_network, lvm_volumes 확인 후 적절한 값으로 수정 
 
-volume 2개를 새로 생성해준다. 유형은 rbd1, 크기는 100GiB이다. 생성 후 vm과 연결해준다. 
+ceph osd disk를 위하여 volume 2개를 새로 생성하고 vm과 연결해준다. 
 lsblk 명령어를 통해 ceph에서 사용할 수 있는 디스크를 확인한다.
 
 .. figure:: _static/prd1.png
@@ -61,7 +63,7 @@ ip a 명령어로 host의 ip주소를 확인한다.
 
 .. figure:: _static/prd2.png
 
-lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 monitor_interface, public_network, cluster_network, lvm_molumes를 변경
+lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 monitor_interface, public_network, cluster_network, lvm_volumes를 변경
 
 이때 public_network, cluster_network 를 호스트 네트워크 대역에 맞추어 설정한다. 
 
@@ -83,18 +85,14 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
 호스트의 네트워크 설정에 맞게 openstack에 사용할 인터페이스를 수정해 주어야 한다. 
 
-neutron chart의 data.values.network.interface.tunnel을 host가 사용하는 interface이름으로 변경한다.
+neutron chart의 ``data.values.network.interface.tunnel`` 을 host가 사용하는 interface이름으로 변경한다.
 
 .. figure:: _static/prd4.png
 
-nova chart의 data.values.conf.hypervisor.host_interface와 
-nova chart의 data.values.conf.libvirt.live_migration_interface도 host의 interface 이름으로 변경한다.
+nova chart의 ``data.values.conf.hypervisor.host_interface`` 와 ``data.values.conf.libvirt.live_migration_interface`` 도 host의 interface 이름으로 변경한다.
 
 .. figure:: _static/prd5.png
 
-nova chart의 data.values.conf.nova.libvirt에 virt_type: qemu를 추가 해주어야 nested vm을 생성할 수 있다.
-
-.. figure:: _static/qemu.png
 
 
 OS 설정

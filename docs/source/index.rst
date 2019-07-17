@@ -35,9 +35,3 @@ Welcome to taco documentation!
    :glob:
 
    architecture/*
-
-.. toctree::
-   :maxdepth: 2
-   :caption: TACO install
-
-   installtaco/taco-aio.rst
