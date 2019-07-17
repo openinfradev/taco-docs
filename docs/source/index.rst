@@ -27,6 +27,7 @@ Welcome to taco documentation!
    tacoplay/kubespray.rst
    tacoplay/ceph-ansible.rst
    tacoplay/openstack-helm.rst
+   tacoplay/armada.rst
 
 .. toctree::
    :maxdepth: 1
