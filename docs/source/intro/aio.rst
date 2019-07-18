@@ -10,8 +10,7 @@ TACO install - aio node
 * Flavor : m1.3xlarge 
 * VCPU:8
 * RAM: 24G
-* Memory: 160G 
-* Network: 
+* Disk: 160G 
 * OS: CentOS-7-x86_64-GenericCloud-1901
 
 
@@ -28,18 +27,20 @@ tacoplay 설정
    $ git clone https://github.com/openinfradev/tacoplay.git
    $ cd tacoplay/
    
+|
 
 * 하위 프로젝트들 fetch
 
-| - armada :  armada 설치에 필요한 소스
-| - ceph-ansible : ceph 설치에 사용되는 ansible playbook
-| - kubespray : kubernetes 설치에 사용되는 ansible playbook
-| - charts : kubernetes위에 openstack을 배포하는 데 필요한 helm chart  
+   * armada :  armada 설치에 필요한 소스
+   * ceph-ansible : ceph 설치에 사용되는 ansible playbook
+   * kubespray : kubernetes 설치에 사용되는 ansible playbook
+   * charts : kubernetes위에 openstack을 배포하는 데 필요한 helm chart  
 
 .. code-block:: bash
 
    $ ./fetch-sub-projects.sh
    
+|
 
 * ceph-ansible site.yml 생성
 
@@ -47,6 +48,7 @@ tacoplay 설정
 
    $ cp ceph-ansible/site.yml.sample ceph-ansible/site.yml
    
+|
 
 * extra-vars.yml 파일 설명 
 
@@ -74,6 +76,7 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
 .. figure:: _static/prd3.png
 
+|
 
 * armada-manifest.yaml 수정
 
@@ -82,6 +85,8 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
    $ cd ~/tacoplay/inventory/sample
    $ vi armada-manifest.yaml
+
+|
 
 호스트의 네트워크 설정에 맞게 openstack에 사용할 인터페이스를 수정해 주어야 한다. 
 
@@ -93,7 +98,19 @@ nova chart의 ``data.values.conf.hypervisor.host_interface`` 와 ``data.values.c
 
 .. figure:: _static/prd5.png
 
+모든 차트의 source 디렉토리 위치가 예시 파일로 주어진 armada-manifest.yaml에서는 /home/centos/tacoplay/...로 되어있다. 이를 자신의 환경에서 tacoplay가 설치되어 있는 경로로 수정 한다. 
 
+.. code-block:: bash
+
+   $ cd ~/tacoplay/inventory/sample
+   $ vi armada-manifest.yaml
+
+ex)
+
+.. figure:: _static/pwd.png
+
+|
+|
 
 OS 설정
 =======
@@ -108,6 +125,8 @@ OS 설정
    ## TACO ClusterInfo
    127.0.0.1 taco-aio localhost localhost.localdomain localhost4 localhost4.localdomain4
 
+|
+|
 
 TACO 설치
 =========
@@ -120,7 +139,8 @@ TACO 설치
    sudo pip install -r ceph-ansible/requirements.txt
    sudo pip install -r kubespray/requirements.txt --upgrade
    sudo pip install -r requirements.txt --upgrade
-   
+ 
+|  
 
 * Taco 설치
 
@@ -134,6 +154,9 @@ TACO 설치
 | -i : 사용할 inventory 파일 지정
 | -e : 실행시간에 변수 값 전달
 
+
+|
+|
 
 TACO 설치 확인
 ==============
@@ -150,6 +173,7 @@ TACO 설치 확인
 
 .. figure:: _static/getpod.png
 
+|
 
 * horizon 접속
 
@@ -161,6 +185,7 @@ http://IP:31000    <-배정받은 machine의 ip를 넣어준다.
 | id : admin
 | pw : password
 
+|
 
 * Network 설정
 
@@ -173,6 +198,7 @@ http://IP:31000    <-배정받은 machine의 ip를 넣어준다.
    sudo iptables -A FORWARD -o eth0 -j ACCEPT
    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
+|
 
 * Openstack 설치 검증
 
@@ -190,7 +216,8 @@ http://IP:31000    <-배정받은 machine의 ip를 넣어준다.
 | - VM 생성 후 floating IP 추가
 | - Volume 생성 후 VM에 추가
 
-
+|
+|
 
 VM 생성 후
 ==========
@@ -210,7 +237,7 @@ VM 생성 후
    | 4dd41f3c-f230-4100-aaaf-3c58cc942463 | test | ACTIVE | private-net=172.30.1.7, 10.10.10.3 | Cirros-0.4.0 | m1.tiny |
    +--------------------------------------+------+--------+------------------------------------+--------------+---------+
 
-
+|
 
 * 생성된 VM에 접속, 외부 통신 확인
 
@@ -227,6 +254,8 @@ ssh로 VM 에 접속 후, 네트워크 접속 상태를 확인하기 위해 ping
    64 bytes from 8.8.8.8: seq=3 ttl=53 time=1.135 ms
    64 bytes from 8.8.8.8: seq=4 ttl=53 time=1.237 ms
 
+|
+|
 
 
 Trouble Shoothing
