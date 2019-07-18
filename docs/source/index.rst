@@ -19,6 +19,12 @@ Welcome to taco documentation!
 
    tacoplay/tacoplay.rst
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Admin guide
+   :glob:
+
+   operation/*
 
 .. toctree::
    :maxdepth: 1
@@ -37,7 +43,8 @@ Welcome to taco documentation!
    architecture/*
 
 .. toctree::
-   :maxdepth: 2
-   :caption: TACO install
+   :maxdepth: 1
+   :caption: Contribute
+   
 
-   installtaco/taco-aio.rst
+   contribute.rst
