@@ -42,7 +42,7 @@ taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한
 
 * sshd_config 수정
 
-외부에서 ID/Password 를 사용해 ssh 접속이 가능하도록 sshd-config 파일의 PasswordAuthentication yes 항목의 주석처리를 풀어준다.  
+외부에서 ID/Password 를 사용해 ssh 접속이 가능하도록 sshd-config 파일의 "PasswordAuthentication yes" 항목의 주석처리를 풀어준다.  
 
 .. code-block:: bash
 
