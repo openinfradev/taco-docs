@@ -54,7 +54,7 @@ taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한
 
 * sshd 재시작 및 재접속
 
-수정한 sshd_config를 읽어오기 위해 sshd 재시작 후 기존 계정의 exit 하고 taco계정으로 재접속한다. 
+수정한 sshd_config를 읽어오기 위해 sshd 재시작 후 기존 계정을 exit 하고 taco계정으로 재접속한다. 
 
 .. code-block:: bash
    
