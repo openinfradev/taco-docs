@@ -1,6 +1,6 @@
 **********************
 TACO install - 5 node
-***********************
+**********************
 
 테스트 환경 
 ===========
@@ -77,7 +77,7 @@ taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한
 =================
 admin node에 접속해 ssh key를 생성한 후 원격서버에 키를 copy해 ssh 접속이 가능하게 한다.
 
-.. code-blcok:: bash
+.. code-block:: bash
 
    $ ssh-keygen
    $ ssh-copy-id MACHINE_IP       # 5개의 서버 ip 에 대해 해당 작업 수행

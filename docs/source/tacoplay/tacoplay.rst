@@ -296,6 +296,19 @@ host_vars 설정 방법
      - data: /dev/sdh
      - data: /dev/sdi
 
+설치
+====
+
+tacoplay를 통해 kubernetes와 OpenStack을 설치한다. 자세한 내용은 아래 문서를 참고한다.
+
+* :doc:`../intro/aio`
+
+.. toctree::
+   :titlesonly:
+
+   ../intro/5-node.rst
+
+
 Playbook Details
 ================
 
@@ -508,4 +521,5 @@ scale.yml
 taco 구축 후 노드를 확장하고 싶은 경우 사용한다. 노드 확장 절차와 playbook 실행 명령은 :doc:`../operation/scale-out` 를 참고한다.
 
 .. code-block:: shell
+
    $ ansible-playbook -v -b -i inventory/sample.ini scale.yml --limit etcd,new_nodes

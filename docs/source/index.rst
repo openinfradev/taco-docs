@@ -7,11 +7,9 @@ Welcome to taco documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
    :caption: First Step
 
    intro/aio.rst
-
 
 .. toctree::
    :maxdepth: 2
