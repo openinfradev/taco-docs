@@ -1,20 +1,30 @@
+**********************
+TACO install - 5 node
 ***********************
-TACO install - aio node
-***********************
 
-테스트 환경 사양
-================
+테스트 환경 
+===========
 
-이 매뉴얼은 다음 환경에서 테스트 한 것을 바탕으로 작성하였다.
+5 노드의 구성은 다음과 같다.
 
-* Flavor : m1.3xlarge 
+* Master node 3
+* Worker node 1
+* Ceph-storage node 1
+
+매뉴얼은 다음 환경에서 테스트 한 것을 바탕으로 작성하였다.
+
+* Flavor : m1.xlarge 
 * VCPU:8
-* RAM: 24G
+* RAM: 16G
 * Disk: 160G 
 * OS: CentOS-7-x86_64-GenericCloud-1901
 
+|
+
 taco 유저 생성
 ==============
+
+해당 과정은 5개의 노드서버에서 모두 진행되어야 한다.
 
 * 유저 생성
 
@@ -63,58 +73,21 @@ taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한
 |
 |
 
-taco 유저 생성
-==============
+유저 ssh key 복사
+=================
+admin node에 접속해 ssh key를 생성한 후 원격서버에 키를 copy해 ssh 접속이 가능하게 한다.
 
-* 유저 생성
+.. code-blcok:: bash
 
-ssh 접속 시 사용할 taco 유저를 생성하고 사용할 패스워드를 입력한다.
-
-.. code-block:: bash
-
-   $ sudo adduser taco
-   $ sudo passwd taco
-
-|
-
-* sudo 권한 설정
-
-taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한다.
-
-.. code-block:: bash
-
-   $ sudo visudo
-   ## Allow root to run any commands anywhere
-   100 root    ALL=(ALL)       ALL
-   taco  ALL=(ALL) NOPASSWD: ALL
-
-|
-
-* sshd_config 수정
-
-외부에서 ID/Password 를 사용해 ssh 접속이 가능하도록 sshd-config 파일의 PasswordAuthentication yes 항목의 주석처리를 풀어준다.
-
-.. code-block:: bash
-
-   $ sudo vi /etc/ssh/sshd-config
-   # To disable tunneled clear text passwords, change to no here!
-   PasswordAuthentication yes
-
-|
-
-* sshd 재시작 및 재접속
-
-수정한 sshd_config를 읽어오기 위해 sshd 재시작 후 기존 계정을 exit 하고 taco계정으로 재접속한다.
-
-.. code-block:: bash
-
-   $ sudo service sshd restart
+   $ ssh-keygen
+   $ ssh-copy-id MACHINE_IP       # 5개의 서버 ip 에 대해 해당 작업 수행
 
 |
 |
 
 tacoplay 설정
 =============
+해당 단계부터는 admin 노드에서 작업을 진행한다. 
 
 * Tacoplay 받아서 준비하기
 
@@ -149,24 +122,35 @@ tacoplay 설정
    
 |
 
-* extra-vars.yml 파일 설명 
+설정 파일 수정
+==============
+
+* extra-vars.yml 파일 수정
 
 ansible-playbook 실행 시 필요한 변수 값을 정의한다.
  
 | - monitor_interface, public_network, cluster_network, lvm_volumes 확인 후 적절한 값으로 수정 
 
-ceph osd disk를 위하여 volume 2개를 새로 생성하고 vm과 연결해준다. 
-lsblk 명령어를 통해 ceph에서 사용할 수 있는 디스크를 확인한다.
+ceph osd disk를 위하여 volume 2개를 새로 생성하고 ceph 노드과 연결해준다. 
+ceph 노드로 ssh 접속 후 lsblk 명령어를 통해 ceph에서 사용할 수 있는 디스크를 확인할 수 있다.
+
+.. code-block:: bash
+
+   $ lsblk
 
 .. figure:: _static/prd1.png
 
-ip a 명령어로 host의 ip주소를 확인한다.
+다시admin 노드로 돌아와 ip a 명령어로 host의 ip주소를 확인한다.
+
+.. code-block:: bash
+ 
+   $ ip a
 
 .. figure:: _static/prd2.png
 
-lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 monitor_interface, public_network, cluster_network, lvm_volumes를 변경
+위에서 확인한 값들로 extra-vars.yml 파일의 monitor_interface, public_network, cluster_network, lvm_volumes를 변경
 
-이때 public_network, cluster_network 를 호스트 네트워크 대역에 맞추어 설정한다. 
+이때 public_network, cluster_network 를 호스트 네트워크 대역에 맞추어 설정한다. lvm_voulmes 부분은 주석을 풀은 후 사용 가능한 디스크의 이름을 적어준다. 
 
 .. code-block:: bash
 
@@ -175,6 +159,7 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
 .. figure:: _static/prd3.png
 
+|
 |
 
 * armada-manifest.yaml 수정
@@ -197,16 +182,12 @@ nova chart의 ``data.values.conf.hypervisor.host_interface`` 와 ``data.values.c
 
 .. figure:: _static/prd5.png
 
-모든 차트의 source 디렉토리 위치가 예시 파일로 주어진 armada-manifest.yaml에서는 /home/centos/tacoplay/...로 되어있다. 이를 자신의 환경에서 tacoplay가 설치되어 있는 경로로 수정 한다. 
+ 예시 파일로 주어진 armada-manifest.yaml에서는 모든 차트의 source 디렉토리 위치가  /home/centos/tacoplay/...로 되어있다. sed 명령어를 통해 이를 자신의 환경에서 tacoplay가 설치되어 있는 경로로 수정 한다. 
 
 .. code-block:: bash
 
-   $ cd ~/tacoplay/inventory/sample
-   $ vi armada-manifest.yaml
-
-ex)
-
-.. figure:: _static/pwd.png
+   $ cd ~/tacoplay
+   $ sed -i "s#/centos#/taco#g" inventory/sample/armada-manifest.yaml
 
 |
 |
@@ -216,13 +197,40 @@ OS 설정
 
 * 호스트 파일 설정
 
-/etc/hosts 파일에서 127.0.0.1 ip에 taco-aio를 추가한다.
+/etc/hosts 파일에서 역할에 맞게 ip 주소와 호스트명을 추가해준다. 
 
 .. code-block:: bash
 
    $ sudo vi /etc/hosts
    ## TACO ClusterInfo
-   127.0.0.1 taco-aio localhost localhost.localdomain localhost4 localhost4.localdomain4
+   127.0.0.1 ctrl-1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+   MACHINE_IP ctrl-2
+   MACHINE_IP ctrl-3
+   MACHINE_IP com-1
+   MACHINE_IP ceph-1
+
+|
+
+* 시간 동기화 작업: 모든 노드
+
+모든 노드에 접속해 chrony.conf 파일을 수정한다. 기존 서버 목록은 모두 주석 처리하고 admin 노드의 ip를 타임서버로 추가해준다.
+
+.. code-block:: bash
+
+   $ ssh taco@MACHINE_IP
+   $ sudo vi /etc/chrony.conf
+   # Use public servers from the pool.ntp.org project.
+   # Please consider joining the pool (http://www.pool.ntp.org/join.html).
+   #server 0.centos.pool.ntp.org iburst
+   #server 1.centos.pool.ntp.org iburst
+   #server 2.centos.pool.ntp.org iburst
+   #server 3.centos.pool.ntp.org iburst
+   server MACHINE_IP	# admin 노드의 ip 주소
+
+.. code-block:: bash
+
+   $ sudo systemctl restart chronyd
+   $ sudo systemctl enable chronyd
 
 |
 |
@@ -267,10 +275,6 @@ TACO 설치 확인
    $ kubectl get pods -n openstack   <- pod 상태 확인
    $ watch 'kubectl get pods -n openstack'   <- watch 명령어를 통해 pod의 상태를 실시간으로 확인
    $ watch 'kubectl get pods -n openstack | grep -v Com'   <- Completed 된 상태의 pod를 제외하고 실시간으로 확인
-
-다음 사진과 같이 pod가 다 뜨게 되면 taco설치가 완료되었다. (kubectl get pods -n openstack | grep -v Com 실행결과)
-
-.. figure:: _static/getpod.png
 
 |
 
@@ -329,13 +333,6 @@ VM 생성 후
 
    $ openstack server list
  
-   > 결과
-   +--------------------------------------+------+--------+------------------------------------+--------------+---------+
-   | ID                                   | Name | Status | Networks                           | Image        | Flavor  |
-   +--------------------------------------+------+--------+------------------------------------+--------------+---------+
-   | 4dd41f3c-f230-4100-aaaf-3c58cc942463 | test | ACTIVE | private-net=172.30.1.7, 10.10.10.3 | Cirros-0.4.0 | m1.tiny |
-   +--------------------------------------+------+--------+------------------------------------+--------------+---------+
-
 |
 
 * 생성된 VM에 접속, 외부 통신 확인
@@ -355,7 +352,6 @@ ssh로 VM 에 접속 후, 네트워크 접속 상태를 확인하기 위해 ping
 
 |
 |
-
 
 Trouble Shoothing
 =================
