@@ -13,55 +13,6 @@ TACO install - aio node
 * Disk: 160G 
 * OS: CentOS-7-x86_64-GenericCloud-1901
 
-taco 유저 생성
-==============
-
-* 유저 생성
-
-ssh 접속 시 사용할 taco 유저를 생성하고 사용할 패스워드를 입력한다. 
-
-.. code-block:: bash
-
-   $ sudo adduser taco
-   $ sudo passwd taco 
-
-|
-
-* sudo 권한 설정 
-
-taco 계정에 패스워드 없이 사용할 수 있는 sudo 권한을 부여한다.
-
-.. code-block:: bash
-
-   $ sudo visudo
-   ## Allow root to run any commands anywhere
-   100 root    ALL=(ALL)       ALL
-   taco  ALL=(ALL) NOPASSWD: ALL 
-
-|
-
-* sshd_config 수정
-
-외부에서 ID/Password 를 사용해 ssh 접속이 가능하도록 sshd-config 파일의 "PasswordAuthentication yes" 항목의 주석처리를 풀어준다.  
-
-.. code-block:: bash
-
-   $ sudo vi /etc/ssh/sshd-config
-   # To disable tunneled clear text passwords, change to no here!
-   PasswordAuthentication yes
-
-|
-
-* sshd 재시작 및 재접속
-
-수정한 sshd_config를 읽어오기 위해 sshd 재시작 후 기존 계정의 exit 하고 taco계정으로 재접속한다. 
-
-.. code-block:: bash
-   
-   $ sudo service sshd restart
- 
-|
-|
 
 taco 유저 생성
 ==============
