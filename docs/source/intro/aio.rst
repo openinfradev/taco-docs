@@ -121,7 +121,7 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
 .. code-block:: bash
 
-   $ cd ~/tacoplay/inventory/sample
+   $ cd ~/tacoplay/inventory/sample/aio
    $ vi extra-vars.yml
 
 .. figure:: _static/prd3.png
@@ -133,7 +133,7 @@ lsblk와 ip a 명령어를 통해 확인한 값들로 extra-vars.yml 파일의 m
 
 .. code-block:: bash
 
-   $ cd ~/tacoplay/inventory/sample
+   $ cd ~/tacoplay/inventory/sample/aio
    $ vi armada-manifest.yaml
 
 |
@@ -152,7 +152,7 @@ nova chart의 ``data.values.conf.hypervisor.host_interface`` 와 ``data.values.c
 
 .. code-block:: bash
 
-   $ cd ~/tacoplay/inventory/sample
+   $ cd ~/tacoplay/inventory/sample/aio
    $ vi armada-manifest.yaml
 
 ex)
@@ -197,7 +197,7 @@ TACO 설치
 .. code-block:: bash
 
    $ cd ~/tacoplay
-   $ ansible-playbook -b -i inventory/sample/hosts.ini -e @inventory/sample/extra-vars.yml site.yml
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml
    
 
 | ansible-playbook 옵션 설명 
