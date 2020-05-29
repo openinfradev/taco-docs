@@ -173,7 +173,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 
 .. code-block:: bash
 
-   $ vi ~/tacoplay/inventory/sample/extra-vars.yml
+   $ vi ~/tacoplay/inventory/sample/aio/extra-vars.yml
    taco_apps: ["openstack"]
    monitor_interface: br-data
    public_network: host_ip_대역(ex. 101.101.101.0/24)
@@ -187,7 +187,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 
 .. code-block:: bash
 
-   $ vi ~/tacoplay/inventory/sample/openstack-manifest.yaml
+   $ vi ~/tacoplay/inventory/sample/aio/openstack-manifest.yaml
    1138             physical_interface_mappings: "provider:veth0"
    1320         host_interface: br-data
    1322         live_migration_interface: br-data
@@ -218,7 +218,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 
 .. code-block:: bash
 
-   $ vi ~/tacoplay/inventory/sample/extra-vars.yml
+   $ vi ~/tacoplay/inventory/sample/aio/extra-vars.yml
    taco_apps: [""]
    monitor_interface: ens5
    public_network: host_ip_대역(ex. 101.101.101.0/24)
@@ -237,7 +237,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 
    $ cd ~/tacoplay/
    ##1. ceph 배포
-   $ ansible-playbook -b -i inventory/sample/hosts.ini -e @inventory/sample/extra-vars.yml site.yml --tags setup-os,ceph,ceph-post-install --skip-tags k8s,lma,openstack,deploy
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --tags setup-os,ceph,ceph-post-install --skip-tags k8s,lma,openstack,deploy
    
 |
 
@@ -246,7 +246,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 .. code-block:: bash
 
    ##2. K8s 배포
-   $ ansible-playbook -b -i inventory/sample/hosts.ini -e @inventory/sample/extra-vars.yml site.yml --tags ceph-post-install,k8s --skip-tags setup-os,ceph,lma,openstack,deploy 
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --tags ceph-post-install,k8s --skip-tags setup-os,ceph,lma,openstack,deploy 
    
 |
 
@@ -255,7 +255,7 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 .. code-block:: bash
 
    ##3. 오픈스택 배포
-   $ ansible-playbook -b -i inventory/sample/hosts.ini -e @inventory/sample/extra-vars.yml site.yml --skip-tags setup-os,ceph,lma,k8s
+   $ ansible-playbook -b -i inventory/sample//aiohosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --skip-tags setup-os,ceph,lma,k8s
 
 |
 
@@ -393,14 +393,14 @@ openstack-manifest.yaml을 위에서 삭제한 Chart_Group만 배포되도록 �
 .. code-block:: bash
 
    ex) infra와 base 차트 그룹은 설치가 되어 있는 경우
-   $ vi ~/tacoplay/inventory/sample/openstack-manifest.yaml
+   $ vi ~/tacoplay/inventory/sample/aio/openstack-manifest.yaml
    849   chart_groups:
    850   #- openstack-infra ## 설치하지 않도록 #으로 주석처리한다.
    851   #- openstack-base  ## 설치하지 않도록 #으로 주석처리한다.
    852   - openstack-compute-kit
    853   - openstack-addon
 
-   $ ansible-playbook -b -i inventory/sample/hosts.ini -e @inventory/sample/extra-vars.yml site.yml --skip-tags setup-os,ceph,lma,k8s
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --skip-tags setup-os,ceph,lma,k8s
 
 |
 
