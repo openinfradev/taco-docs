@@ -51,7 +51,7 @@ tacoplay는 taco를 설치하는 프로그램이다.
 
    $ sudo su - centos
    $ cd ~/
-   $ git clone -b tacoplay-2.0 --single-branch https://github.com/openinfradev/tacoplay.git
+   $ git clone -b taco-v20.05 --single-branch https://github.com/openinfradev/tacoplay.git
    $ cd tacoplay/
    $ sudo yum install -y python-pip
    $ sudo pip install --upgrade pip
