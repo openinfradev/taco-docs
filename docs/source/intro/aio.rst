@@ -259,10 +259,6 @@ host ip 주소는 "$ ip a" 명령어로 확인할 수 있다.(netstat -r 혹은 
 
 |
 
-ansible-playbook이 성공적으로 종료되었다면 <host_ip>:31000 으로 웹 접속하여 openstack를 사용할 수 있다.
-(로그인 정보: default / admin / password)
-
-
 테스트 환경 사양에 따라 배포 완료 시간이 40분에서 2시간까지 달라질 수 있다. 오픈스택 배포 중인 경우 별도의 터미널에 watch 명령을 사용하여 Completed나 Running 상태가 아닌 파드들을 모니터링할 수 있다.
 
 .. code-block:: bash
@@ -270,6 +266,9 @@ ansible-playbook이 성공적으로 종료되었다면 <host_ip>:31000 으로 �
    $ watch 'kubectl get pods -n openstack | grep -v Comp | grep -v Runn'
 
 |
+
+ansible-playbook이 성공적으로 종료되었다면 <host_ip>:31000 으로 웹 접속하여 openstack를 사용할 수 있다.
+(로그인 정보: default / admin / password)
 
 * ansible 로그 확인 방법
 1. /tmp/ansible.log를 확인한다.
