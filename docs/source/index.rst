@@ -10,8 +10,8 @@ Welcome to taco documentation!
    :maxdepth: 2
    :caption: First Step
 
-   intro/aio.rst
-
+   intro/aio-k8s.rst
+   intro/aio-ops.rst
 
 .. toctree::
    :maxdepth: 2
