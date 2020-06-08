@@ -1,8 +1,8 @@
 ***************************************
-TACO 2.0 AIO 설치 가이드 (Full Deployment)
+TACO 2.0 AIO 설치 가이드 (Kubernetes & Ceph & OpenStack Deployment)
 ***************************************
 
-이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Ceph, Kubernetes, OpenStack을 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
+이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Kubernetes, Ceph, OpenStack을 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
 
 .. contents::
   :local:
@@ -221,12 +221,14 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
 
 |
 
-* { network_cidr } : 172.32.0.0/24   <--아래에서 출력된 9번째 줄에서 확인 가능한 172.32.0.81/24의 네 번째 옥텟을 0으로 바꾼 값. 브릿지 네트워크를 구성한 경우에는 br-data의 { host_ip }를 통해 구한다.
+* { host_ip } : 172.32.0.81   <-- 아래 출력된 결과의 9번째 줄에서 확인 가능. 브릿지 네트워크를 구성한 경우에는 네트워크 구성 단계에서 확인한 { host_ip }(혹은 br-data가 갖고 있는 ip)를 사용한다.
+
+* { network_cidr } : 172.32.0.0/24   <--아래에서 출력된 9번째 줄에서 확인 가능한 172.32.0.81/24의 네 번째 옥텟을 0으로 바꾼 값. 브릿지 네트워크를 구성한 경우에는 네트워크 구성 단계에서 확인한 { host_ip }(혹은 br-data가 갖고 있는 ip)를 통해 구한다.
 
 .. code-block:: bash
 
    $ ip a
-   ##(example)
+   ##(example)br-data 구성하기 전
    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
        inet 127.0.0.1/8 scope host lo
@@ -238,6 +240,39 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
        inet 172.32.0.81/24 brd 172.32.0.255 scope global dynamic ens5
           valid_lft 3520sec preferred_lft 3520sec
       inet6 fe80::ae:faff:fef2:8884/64 scope link
+          valid_lft forever preferred_lft forever
+
+|
+
+브릿지 네트워크를 구성하였다면 아래와 비슷한 결과가 출력될 것이다. 이때 { host_ip }와 { network_cidr }은 br-data의 것을 참고한다.
+
+.. code-block:: bash
+
+   $ ip a
+   ##(example)br-data 구성한 후
+   1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+       link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+       inet 127.0.0.1/8 scope host lo
+          valid_lft forever preferred_lft forever
+       inet6 ::1/128 scope host
+          valid_lft forever preferred_lft forever.
+   2: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq master br-data state UP group default qlen 1000
+       link/ether 02:ae:fa:f2:88:84 brd ff:ff:ff:ff:ff:ff
+       inet6 fe80::ae:faff:fef2:8884/64 scope link
+          valid_lft forever preferred_lft forever
+   3: br-data: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+       link/ether 02:ae:fa:f2:88:84 brd ff:ff:ff:ff:ff:ff
+       inet 172.32.0.81/24 brd 172.32.0.255 scope global br-data
+          valid_lft forever preferred_lft forever
+       inet6 fe80::ae:faff:fef2:8884/64 scope link
+          valid_lft forever preferred_lft forever
+   4: veth1@veth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-data state UP group default qlen 1000
+       link/ether 1e:88:df:ce:3a:43 brd ff:ff:ff:ff:ff:ff
+       inet6 fe80::1c88:dfff:fece:3a43/64 scope link
+          valid_lft forever preferred_lft forever
+   5: veth0@veth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+       link/ether 06:12:1a:0a:65:25 brd ff:ff:ff:ff:ff:ff
+       inet6 fe80::412:1aff:fe0a:6525/64 scope link
           valid_lft forever preferred_lft forever
 
 |
@@ -259,6 +294,33 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
 
 |
 
+
+* (optional) LMA (Logging, Monitoring, Alerting) 설치를 위한 인벤토리 설정
+
+LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을 확인할 수 있는 대쉬보드가 제공
+된다.
+
+제공된 샘플 extra-vars.yml 에서 아래와 같이 1가지 항목의 value를 수정한다.
+
+.. code-block:: bash
+
+   ##taco_apps의 value에 "lma"를 추가하면 자동으로 LMA를 설치한다.
+   $ vi ~/tacoplay/inventory/sample/aio/extra-vars.yml
+   taco_apps: ["openstack","lma"]
+
+|
+
+제공된 샘플 lma-manifest.yaml 에서 아래와 같이 예시 ip를 { host_ip } 로 수정해준다.
+
+.. code-block:: bash
+
+   ##총 9군데에 192.168.97.120 로 적혀있는 예시 ip를 설치 환경의 { host_ip } 로 수정해준다.
+   $ vi ~/tacoplay/inventory/sample/aio/lma-manifest.yaml
+   :%s/192.168.97.120/{ host_ip }/g
+
+|
+
+
 tacoplay 실행
 ^^^^^^^^^^^^
 
@@ -271,28 +333,23 @@ tacoplay 실행
 
 |
 
-테스트 환경 사양에 따라 배포 완료 시간이 40분에서 2시간까지 달라질 수 있다. 오픈스택 배포가 시작되면 "TASK [taco-apps/deploy : deploy apps using 'armada apply']"에서 한동안 ansible 로그가 출력되지 않는데, 별도의 터미널에서 watch 명령을 사용하면 배포 중인 파드들을 모니터링할 수 있다.
+테스트 환경 사양에 따라 배포 완료 시간이 40분에서 2시간까지 달라질 수 있다. 오픈스택 배포가 시작되면 "TASK [taco-apps/deploy : deploy apps using 'armada apply']"에서 한동안 ansible 로그가 출력되지 않는데, 별도의 터미널에서 watch 명령을 사용하면 배포 중인 파드들을 모니터링할 수 있다. LMA의 배포를 모니터링하는 것도 마찬가지이다.
 
 .. code-block:: bash
 
-   $ watch 'kubectl get pods -n openstack'
-   $ watch 'kubectl get pods -n openstack | grep -v Comp'
-   $ watch 'kubectl get pods -n openstack | grep -v Comp | grep -v Runn'
+   $ watch 'kubectl get pods -n openstack'   ##openstack을 구성하는 모든 파드를 모니터링
+   $ watch 'kubectl get pods -n openstack | grep -v Comp'   ##Completed 상태인 파드를 제외하고 모니터링
+   $ watch 'kubectl get pods -n openstack | grep -v Comp | grep -v Runn'   ##Completed 혹은 Running 상태인 파드를 제외하고 모니터링
+
+   $ watch 'kubectl get pods -n lma'   ##lma를 구성하는 모든 파드를 모니터링
+   $ watch 'kubectl get pods -n fed'   ##fed(fedaration) 관련 파드를 모니터링
+   
+   $ watch 'kubectl get pods -A'   ##모든 K8s 파드를 모니터링(kube-system, openstack, lma, fed)
 
 |
 
-모든 Running 파드가 ready 상태가 되면 몇 가지 테스트를 수행하고 ansible은 종료된다. 만약 horizon 파드가 ready 되지 못하고 restart가 반복된다면 해당 문서의 Trouble Shooting을 참고한다.
+모든 Running 파드가 ready 상태가 되면 ansible은 곧 종료된다. 만약 openstack 네임스페이스의 horizon 파드가 ready 되지 못하고 restart가 반복된다면 해당 문서의 Trouble Shooting을 참고한다.
 
-
-* K8s 설치 확인
-
-.. code-block:: bash
-
-   $ kubectl get pods -n kube-system
-
-|
-
-정상적으로 kube-system 파드들이 올라왔는지 확인한다.
 
 * 오픈스택 설치 확인
 
@@ -306,9 +363,20 @@ tacoplay 실행
 
 |
 
-* 오픈스택 네트워크 토폴로지 생성
+* LMA 접속
 
-네트워크를 구성해주어야 오픈스택에서 인스턴스를 생성할 수 있다. 다음은 centos 계정에 생성된 os_client를 통해 예시 네트워크를 생성하는 절차이다.
+LMA를 설치한 경우 아래 접속 정보를 참고하여 웹 브라우저로 접속해본다.
+
+   * Kibana : http://{ host_ip }:30001/
+   아이디 / 패스워드 : elastic / tacoword
+
+   * Grafana : http://{ host_ip }:30009/
+   아이디 / 패스워드 : admin / password
+   
+
+* 오픈스택 VM 생성을 위한 네트워크 토폴로지 구성
+
+네트워크를 구성해주어야 오픈스택에서 인스턴스를 생성할 수 있다. 다음은 centos 계정에 생성된 os_client를 통해 예시 네트워크를 구성하는 절차이다.
 
 .. code-block:: bash
 
@@ -353,7 +421,7 @@ Trouble Shooting
 2. ansible-playbook 명령 시 -vvvv 옵션을 추가하면 더 구체적인 로그가 기록된다.
 
 * ansible 설치 중에 문제가 발생하여 재설치할 때 tag를 이용하여 일부 role만 수행하는 방법
-tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대로 설치가 진행된다. 설치는 크게 보았을 때 ceph - K8s - 오픈스택 순으로 진행된다. 이를 부분적으로 설치하고 싶다면 아래 명령을 수행하면 된다.
+tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대로 설치가 진행된다. 설치는 크게 보았을 때 ceph - K8s - taco_app(오픈스택 및 LMA) 순으로 진행된다. 이를 부분적으로 설치하고 싶다면 아래 명령을 수행하면 된다.
 
 .. code-block:: bash
 
@@ -444,15 +512,26 @@ tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대�
 .. code-block:: bash
 
    $ kubectl edit deployment -n openstack horizon
-     livenessProbe:
-       failureThreshold: 3 
-       httpGet:
-         path: /
-         port: 80
-         scheme: HTTP
-       initialDelaySeconds: 180
-       periodSeconds: 600
-       successThreshold: 1
-       timeoutSeconds: 5
+     86         livenessProbe:
+     87           failureThreshold: 3
+     88           httpGet:
+     89             path: /
+     90             port: 80
+     91             scheme: HTTP
+     92           initialDelaySeconds: 180   ##HERE
+     93           periodSeconds: 600   ##HERE
+     94           successThreshold: 1
+     95           timeoutSeconds: 5
+
+    101         readinessProbe:
+    102           failureThreshold: 3
+    103           httpGet:
+    104             path: /
+    105             port: 80
+    106             scheme: HTTP
+    107           initialDelaySeconds: 180   ##HERE
+    108           periodSeconds: 600   ##HERE
+    109           successThreshold: 1
+    110           timeoutSeconds: 1
 
 |

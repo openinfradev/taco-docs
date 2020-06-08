@@ -1,8 +1,8 @@
-**************************************************
-TACO 2.0 AIO 설치 가이드 (Kubernetes Only Deployment)
-**************************************************
+****************************************************
+TACO 2.0 AIO 설치 가이드 (Kubernetes & Ceph Deployment)
+****************************************************
 
-이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Ceph, Kubernetes를 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
+이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Kubernetes, Ceph을 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
 
 .. contents::
   :local:
@@ -125,6 +125,8 @@ tacoplay에 필요한 패키지와 소스 코드를 다운로드한다.
 
 |
 
+* { host_ip } : 172.32.0.81   <-- 아래 출력된 결과의 9번째 줄에서 확인 가능.
+
 * { network_cidr } : 172.32.0.0/24   <--아래에서 출력된 9번째 줄에서 확인 가능한 172.32.0.81/24의 네 번째 옥텟을 0으로 바꾼 값.
 
 .. code-block:: bash
@@ -148,7 +150,7 @@ tacoplay에 필요한 패키지와 소스 코드를 다운로드한다.
 
 * 인벤토리 설정
 
-제공된 sample extra-vars.yml 파일에서 아래와 같이 5가지 항목의 value를 수정한다.
+제공된 샘플 extra-vars.yml 에서 아래와 같이 5가지 항목의 value를 수정한다.
 
 .. code-block:: bash
 
@@ -163,6 +165,31 @@ tacoplay에 필요한 패키지와 소스 코드를 다운로드한다.
 
 |
 
+* (optional) LMA (Logging, Monitoring, Alerting) 설치를 위한 인벤토리 설정
+
+LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을 확인할 수 있는 대쉬보드가 제공된다.
+
+제공된 샘플 extra-vars.yml 에서 아래와 같이 1가지 항목의 value를 수정한다.
+
+.. code-block:: bash
+
+   ##taco_apps의 value에 "lma"를 추가하면 자동으로 LMA를 설치한다.
+   $ vi ~/tacoplay/inventory/sample/aio/extra-vars.yml
+   taco_apps: ["lma"]
+
+|
+
+제공된 샘플 lma-manifest.yaml 에서 아래와 같이 예시 ip를 { host_ip } 로 수정해준다.
+
+.. code-block:: bash
+
+   ##총 9군데에 192.168.97.120 로 적혀있는 예시 ip를 설치 환경의 { host_ip } 로 수정해준다. 
+   $ vi ~/tacoplay/inventory/sample/aio/lma-manifest.yaml
+   :%s/192.168.97.120/{ host_ip }/g
+
+|
+
+
 tacoplay 실행
 ^^^^^^^^^^^^
 
@@ -175,25 +202,24 @@ tacoplay 실행
 
 |
 
-테스트 환경 사양에 따라 배포 완료 시간이 20분에서 1시간까지 달라질 수 있다.
-
-* K8s 설치 확인
+테스트 환경 사양에 따라 배포 완료 시간이 30분 정도에서 1시간 정도까지 달라질 수 있다. LMA를 설치하는 경우에 "TASK [taco-apps/deploy : deploy apps using 'armada apply']"에서 20분 가량 ansible log가 나타나지 않는데, 이때는 K8s 파드가 배포되고 있는지 모니터링하여 과정을 살펴볼 수 있다.
 
 .. code-block:: bash
 
-   $ kubectl get pods -n kube-system
+   $ watch 'kubectl get pods -A'
 
 |
 
-정상적으로 kube-system 파드들이 올라왔는지 확인한다. 만약 "The connection to the server localhost:8080 was refused"와 같은 문구가 발생한다면 아래 명령을 수행한다.
+* LMA 접속
 
-.. code-block:: bash
+LMA를 설치한 경우 아래 접속 정보를 참고하여 웹 브라우저로 접속해본다.
 
-   $ kubectl get pods -n kube-system
-   $ kubectl get services -n kube-system
-   $ kubectl get deployments -n kube-system
+   * Kibana: http://{ host_ip }:30001/
+   아이디 / 패스워드 : elastic / tacoword
+   
+   * Grafana : http://{ host_ip }:30009/
+   아이디 / 패스워드 : admin / password
 
-|
 
 Trouble Shooting
 ================
@@ -203,7 +229,7 @@ Trouble Shooting
 2. ansible-playbook 명령 시 -vvvv 옵션을 추가하면 더 구체적인 로그가 기록된다.
 
 * ansible 설치 중에 문제가 발생하여 재설치할 때 tag를 이용하여 일부 role만 수행하는 방법
-tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대로 설치가 진행된다. 설치는 크게 보았을 때 ceph - K8s - taco_app 순으로 진행된다. 이를 부분적으로 설치하고 싶다면 아래 명령을 수행하면 된다.
+tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대로 설치가 진행된다. 설치는 크게 보았을 때 ceph - K8s - taco_app(LMA) 순으로 진행된다. 이를 부분적으로 설치하고 싶다면 아래 명령을 수행하면 된다.
 
 .. code-block:: bash
 
