@@ -1,8 +1,8 @@
-***************************
-TACO 2.0 AIO 설치 가이드
-***************************
+***************************************
+TACO 2.0 AIO 설치 가이드 (Full Deployment)
+***************************************
 
-이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Kubernetes, Ceph, OpenStack을 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
+이 매뉴얼은 AWS에서 생성한 EC2 환경을 기준으로 작성되었으며, Ceph, Kubernetes, OpenStack을 하나의 VM에 모두 설치하는 AIO (All-In-One) 가이드이다.
 
 .. contents::
   :local:
@@ -28,12 +28,10 @@ Single Host 사양
 네트워크 설정
 ^^^^^^^^^^^^
 
-* 포트 개방 : 80, 30608, 31000
+* 포트 개방 : 80, 30608, 31000 (+LMA 설치시 30001, 30009, 30018, 32000)
 
 Installing Guide
 ================
-
-오픈스택 설치 여부에 따라 1) ceph + K8s 설치와 2) ceph + K8s + 오픈스택 설치로 나누어 설명하고 있으니 유의하도록 한다.
 
 계정 설정
 ^^^^^^^^^
@@ -110,10 +108,8 @@ tacoplay에 필요한 패키지와 소스 코드를 다운로드한다.
 
 |
 
-브릿지 네트워크 구성(오픈스택을 설치하는 경우)
+브릿지 네트워크 구성
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-K8s까지만 설치하고자 하는 경우에는 생략하도록 한다.
 
 AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당해주기 위해서 브릿지 네트워크를 구성해야 한다. 이를 위해 필요한 로컬 정보를 아래의 방법으로 확인한다.
 
@@ -211,7 +207,7 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
 인벤토리 수정
 ^^^^^^^^^^^^
 
-인벤토리 설정을 위해 필요한 값을 아래의 방법으로 확인한다.
+인벤토리 설정을 위해 필요한 로컬 정보를 아래의 방법으로 확인한다.
 
 * { Additional_Empty_Volume } : nvme1n1   <--추가한 50G 빈 볼륨
 
@@ -246,26 +242,9 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
 
 |
 
-* ceph + K8s 설치를 위한 인벤토리 설정
+* 인벤토리 설정
 
 제공된 sample extra-vars.yml 파일에서 아래와 같이 5가지 항목의 value를 수정한다.
-
-.. code-block:: bash
-
-   ##{ } 안에 알맞은 값을 대입하여 아래 설정을 extra-vars.yml에 저장한다.
-   $ vi ~/tacoplay/inventory/sample/aio/extra-vars.yml
-   taco_apps: [""]
-   monitor_interface: { ethernet_interface }   ##should be edited
-   public_network: { network_cidr }   ##should be edited
-   cluster_network: { network_cidr }   ##should be edited
-   lvm_volumes:
-     - data: /dev/{ Addtional_Empty_Volume }   ##should be edited
-
-|
-
-* ceph + K8s + 오픈스택 설치를 위한 인벤토리 설정
-
-오픈스택 설치를 위해 브릿지 네트워크를 구성했다는 전제하에 제공된 sample extra-vars.yml 파일에서 아래와 같이 5가지 항목의 value를 수정한다.
 
 .. code-block:: bash
 
@@ -313,15 +292,7 @@ tacoplay 실행
 
 |
 
-정상적으로 kube-system 파드들이 올라왔는지 확인한다. 만약 "The connection to the server localhost:8080 was refused"와 같은 문구가 발생한다면 아래 명령을 수행한다.
-
-.. code-block:: bash
-
-   $ kubectl get pods -n kube-system
-   $ kubectl get services -n kube-system
-   $ kubectl get deployments -n kube-system
-
-|
+정상적으로 kube-system 파드들이 올라왔는지 확인한다.
 
 * 오픈스택 설치 확인
 
@@ -374,8 +345,6 @@ tacoplay 실행
 
 네트워크를 구성했다면 { host_ip }:31000 으로 접속하여 Compute > 인스턴스 탭에서 인스턴스를 추가할 수 있다. 제공되는 cirros 이미지를 사용하여 인스턴스를 생성했다면, 인스턴스명을 클릭하여 콘솔탭으로 접근한다. cirros의 default 로그인 정보는 cirros / gocubsgo 이다.(콘솔이 정상적으로 열리지 않는다면 웹페이지 새로고침을 반복한다.)
 
-
-
 Trouble Shooting
 ================
 
@@ -396,14 +365,14 @@ tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대�
 .. code-block:: bash
 
    ##2. ceph이 정상적으로 설치되었을 때, K8s를 설치하는 커맨드(ceph을 중복으로 설치하게 되면 문제가 발생하여 스킵해준다)
-   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --tags ceph-post-install,k8s --skip-tags ceph
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --tags ceph-post-install,k8s,taco-clients --skip-tags ceph
 
 |
 
 .. code-block:: bash
 
-   ##3. K8s까지 정상적으로 설치되었을 때, 오픈스택을 설치하는 커맨드(K8s는 중복으로 설치하여도 문제가 없지만, 시간 단축을 위해 스킵해준다)
-   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --skip-tags setup-os,ceph,k8s
+   ##3. K8s까지 정상적으로 설치되었을 때, taco_app(오픈스택 및 LMA)의 배포 혹은 남은 role을 수행하는 커맨드
+   $ ansible-playbook -b -i inventory/sample/aio/hosts.ini -e @inventory/sample/aio/extra-vars.yml site.yml --skip-tags ceph,k8s
 
 |
 
