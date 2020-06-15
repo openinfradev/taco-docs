@@ -297,8 +297,13 @@ AIO node가 보유한 IP 자원을 오픈스택 위에 생성될 VM에게 할당
 
 * (optional) LMA (Logging, Monitoring, Alerting) 설치를 위한 인벤토리 설정
 
-LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을 확인할 수 있는 대쉬보드가 제공
-된다.
+LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을 확인할 수 있는 대쉬보드가 제공된다. LMA를 구성하는 소프트웨어 컴포넌트는 다음과 같다.
+
+   * Prometheus
+   * Grafana
+   * Fluentbit
+   * Elasticsearch
+   * Kibana
 
 제공된 샘플 extra-vars.yml 에서 아래와 같이 1가지 항목의 value를 수정한다.
 
@@ -310,16 +315,54 @@ LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을
 
 |
 
-제공된 샘플 lma-manifest.yaml 에서 아래와 같이 예시 ip를 { host_ip } 로 수정해준다.
+제공된 샘플 lma-manifest.yaml 에서 총 14개의 FIXME 주석이 표시된 항목들을 알맞게 수정해준>다.
 
 .. code-block:: bash
 
-   ##총 9군데에 192.168.97.120 로 적혀있는 예시 ip를 설치 환경의 { host_ip } 로 수정해준다.
    $ vi ~/tacoplay/inventory/sample/aio/lma-manifest.yaml
-   :%s/192.168.97.120/{ host_ip }/g
+   #Prometheus의 볼륨 크기를 정해준다.
+   273                   storage: 200Gi # FIXME
+
+   #K8s-master의 host_ip, 위에서 사용한 { host_ip }를 사용한다.
+   278       - ENTER_YOUR_MASTER1_IP    # FIXME
+
+   #Federated master Prometheus의 볼륨 크기를 정해준다.
+   466                   storage: 500Gi # FIXME
+
+   #Elasticsearch 인스턴스 갯수를 정해준다.
+   607         count: 1 # FIXME
+
+   #Elasticsearch의 볼륨 크기를 정해준다.
+   618                 storage: 2000Gi          # FIXME
+
+   #Grafana의 볼륨 크기를 정해준다.
+   686       size: 10G  # FIXME
+
+   #Elasticsearch URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   867         host: "https://taco-elasticsearch-es-http:9200"          # FIXME
+
+   #Datasource Prometheus URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   874         hosts: ["lma-prometheus-fed-master-prometheus.fed.svc.cluster.local:9090"]       # FIXME
+
+   #Ceph-monitor의 host_ip, 위에서 사용한 { host_ip }를 사용한다.
+   891         - ip: ENTER_YOUR_CEPH_MONITOR_IP # FIXME
+
+   #Elasticsearch URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   926         host: "https://taco-elasticsearch-es-http.lma.svc.cluster.local:9200"    # FIXME
+
+   #Kibana URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   930         host: "taco-kibana-dashboard-kb-http.lma.svc.cluster.local:5601"         # FIXME
+
+   #Datasource Prometheus URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   933         hosts: ["lma-prometheus-fed-master-prometheus.fed.svc.cluster.local:9090"]       # FIXME
+
+   #K8s-master의 host_ip, 위에서 사용한 { host_ip }를 사용한다.
+   956         address: ENTER_YOUR_MASTER1_IP   # FIXME
+
+   #Kibana URL, AIO 설치에선 변경하지 않고 그대로 사용한다.
+   970       url: "http://taco-kibana-dashboard-kb-http.lma.svc.cluster.local:5601"     # FIXME
 
 |
-
 
 tacoplay 실행
 ^^^^^^^^^^^^
