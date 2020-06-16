@@ -578,3 +578,16 @@ tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대�
     110           timeoutSeconds: 1
 
 |
+
+* taco-apps manifest 재배포 방법
+만약 openstack-manifest.yaml 혹은 lma-manifest.yaml에 변경사항이 생겨 재배포를 원한다면 직접 aramada 컨테이너를 사용하여 배포할 수 있다.
+
+.. code-block:: bash
+
+   #아래 { host_ip }를 알맞은 값으로 수정하여 명령을 입력한다. (OpenStack)
+   $ docker exec -u root armada armada apply --tiller-host { host_ip } --tiller-port 32134 --timeout 7200 /home/centos/tacoplay/inventory/sample/aio/openstack-manifest.yaml
+
+   #아래 { host_ip }를 알맞은 값으로 수정하여 명령을 입력한다. (LMA)
+   $ docker exec -u root armada armada apply --tiller-host { host_ip } --tiller-port 32134 --timeout 7200 /home/centos/tacoplay/inventory/sample/aio/lma-manifest.yaml
+
+|

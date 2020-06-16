@@ -319,3 +319,13 @@ tacoplay 실행 시 tacoplay/site.yml에 작성되어 있는 role의 순서대�
 |
 
 위 명령을 순차적으로 수행한다. root 계정에서는 K8s 클러스터에 접근할 수 있으나 centos와 같은 user 계정에서 접근하지 못할 때 발생한다.(참고: https://snowdeer.github.io/kubernetes/2018/02/13/kubernetes-can-not-use-kubectl/)
+
+* taco-apps manifest 재배포 방법
+만약 lma-manifest.yaml에 변경사항이 생겨 재배포를 원한다면 직접 aramada 컨테이너를 사용하여 배포할 수 있다.
+
+.. code-block:: bash
+
+   #아래 { host_ip }를 알맞은 값으로 수정하여 명령을 입력한다.
+   $ docker exec -u root armada armada apply --tiller-host { host_ip } --tiller-port 32134 --timeout 7200 /home/centos/tacoplay/inventory/sample/aio/lma-manifest.yaml
+
+|
