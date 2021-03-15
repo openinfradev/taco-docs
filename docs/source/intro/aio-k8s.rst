@@ -179,17 +179,6 @@ LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을
 
 |
 
-제공된 샘플 lma-manifest.yaml 에서 아래와 같이 예시 ip를 { host_ip } 로 수정해준다.
-
-.. code-block:: bash
-
-   ##총 9군데에 192.168.97.120 로 적혀있는 예시 ip를 설치 환경의 { host_ip } 로 수정해준다. 
-   $ vi ~/tacoplay/inventory/sample/aio/lma-manifest.yaml
-   :%s/192.168.97.120/{ host_ip }/g
-
-|
-
-
 tacoplay 실행
 ^^^^^^^^^^^^
 
@@ -202,11 +191,43 @@ tacoplay 실행
 
 |
 
-테스트 환경 사양에 따라 배포 완료 시간이 30분 정도에서 1시간 정도까지 달라질 수 있다. LMA를 설치하는 경우에 "TASK [taco-apps/deploy : deploy apps using 'armada apply']"에서 20분 가량 ansible log가 나타나지 않는데, 이때는 K8s 파드가 배포되고 있는지 모니터링하여 과정을 살펴볼 수 있다.
+테스트 환경 사양에 따라 배포 완료 시간이 30분 정도에서 1시간 정도까지 달라질 수 있다.
 
+Taco apps 설치
+^^^^^^^^^^^^^^
+
+* LMA 설치
+Tacoplay를 통한 LMA 등의 taco_apps는 [Decapod](https://github.com/openinfradev/decapod-flow.git)을 사용한다. 
+아래 메뉴얼은 Argo CLI를 사용하는 방법이다. Argo UI(http://{ host_ip }:30004/)를 통해서도 실행할 수 있다.
 .. code-block:: bash
 
-   $ watch 'kubectl get pods -A'
+   $ git clone https://github.com/openinfradev/decapod-flow.git
+   $ cd decapod-flow/workflows
+   $ argo submit --from wftmpl/prepare-manifest -n argo
+   $ argo list -n argo
+   // prepare-manifest-XXX workflow가 완료될 때 까지 기다린다.
+
+   $ argo submit lma-federation-wf.yaml
+
+|
+
+* (Optional) LMA 커스터마이징
+위에서 설치한 LMA에 대한 configuration을 보거나 수정하고 싶다면,
+[decapod-base-yaml](https://github.com/openinfradev/decapod-base-yaml.git)과 [decapod-site-yaml](https://github.com/openinfradev/decapod-site-yaml.git)을 참조하여 자신의 site-yaml을 만들어야 한다.
+
+1. [decapod-site-yaml](https://github.com/openinfradev/decapod-site-yaml.git)을 fork한다.
+2. decapod-site-yaml/lma/site/hanu-deploy-apps/site-values.yaml 의 값들을 바꾸고 commit한다.
+3. Argo CLI로 prepare-manifest를 다시 실행한다.
+.. code-block:: bash
+
+   $ argo submit --from wftmpl/prepare-manifest -p site_yaml_url=https://github.com/{ your_repo }/decapod-site-yaml.git
+
+|
+
+4. LMA를 재 배포한다.
+.. code-block:: bash
+
+   $ argo submit lma-federation-wf.yaml
 
 |
 

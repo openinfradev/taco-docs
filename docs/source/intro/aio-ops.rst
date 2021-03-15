@@ -310,16 +310,6 @@ LMA를 설치하면 TACO가 관리하는 리소스의 로그와 사용 현황을
 
 |
 
-제공된 샘플 lma-manifest.yaml 에서 아래와 같이 예시 ip를 { host_ip } 로 수정해준다.
-
-.. code-block:: bash
-
-   ##총 9군데에 192.168.97.120 로 적혀있는 예시 ip를 설치 환경의 { host_ip } 로 수정해준다.
-   $ vi ~/tacoplay/inventory/sample/aio/lma-manifest.yaml
-   :%s/192.168.97.120/{ host_ip }/g
-
-|
-
 
 tacoplay 실행
 ^^^^^^^^^^^^
@@ -333,7 +323,49 @@ tacoplay 실행
 
 |
 
-테스트 환경 사양에 따라 배포 완료 시간이 40분에서 2시간까지 달라질 수 있다. 오픈스택 배포가 시작되면 "TASK [taco-apps/deploy : deploy apps using 'armada apply']"에서 한동안 ansible 로그가 출력되지 않는데, 별도의 터미널에서 watch 명령을 사용하면 배포 중인 파드들을 모니터링할 수 있다. LMA의 배포를 모니터링하는 것도 마찬가지이다.
+테스트 환경 사양에 따라 배포 완료 시간이 40분에서 2시간까지 달라질 수 있다.
+
+Taco apps 설치
+^^^^^^^^^^^^^^
+
+* OpenStack 설치
+Tacoplay를 통한 OpenStack 등의 taco_apps는 [Decapod](https://github.com/openinfradev/decapod-flow.git)을 사용한다. 
+아래 메뉴얼은 Argo CLI를 사용하는 방법이다. Argo UI(http://{ host_ip }:30004/)를 통해서도 실행할 수 있다.
+.. code-block:: bash
+
+   $ git clone https://github.com/openinfradev/decapod-flow.git
+   $ cd decapod-flow/workflows
+   $ argo submit --from wftmpl/prepare-manifest -n argo
+   $ argo list -n argo
+   // prepare-manifest-XXX workflow가 완료될 때까지 기다린다.
+
+   $ argo submit openstack-infra-wf.yaml
+   // openstack-infra-XXX workflow 가 완료될 때까지 기다린다.
+   $ argo submit openstack-components-wf.yaml
+
+|
+
+* (Optional) OpenStack 커스터마이징
+위에서 설치한 OpenStack 대한 configuration을 보거나 수정하고 싶다면,
+[decapod-base-yaml](https://github.com/openinfradev/decapod-base-yaml.git)과 [decapod-site-yaml](https://github.com/openinfradev/decapod-site-yaml.git)을 참조하여 자신의 site-yaml을 만들어야 한다.
+
+1. [decapod-site-yaml](https://github.com/openinfradev/decapod-site-yaml.git)을 fork한다.
+2. decapod-site-yaml/openstack/site/hanu-deploy-apps/site-values.yaml 의 값들을 바꾸고 commit한다.
+3. Argo CLI로 prepare-manifest를 다시 실행한다.
+.. code-block:: bash
+
+   $ argo submit --from wftmpl/prepare-manifest -p site_yaml_url=https://github.com/{ your_repo }/decapod-site-yaml.git
+
+|
+
+4. OpenStack 재 배포한다.
+.. code-block:: bash
+
+   $ argo submit openstack-infra-wf.yaml
+   // openstack-infra-XXX workflow 가 완료될 때까지 기다린다.
+   $ argo submit openstack-components-wf.yaml
+
+|
 
 .. code-block:: bash
 
@@ -347,9 +379,6 @@ tacoplay 실행
    $ watch 'kubectl get pods -A'   ##모든 K8s 파드를 모니터링(kube-system, openstack, lma, fed)
 
 |
-
-모든 Running 파드가 ready 상태가 되면 ansible은 곧 종료된다. 만약 openstack 네임스페이스의 horizon 파드가 ready 되지 못하고 restart가 반복된다면 해당 문서의 Trouble Shooting을 참고한다.
-
 
 * 오픈스택 설치 확인
 
